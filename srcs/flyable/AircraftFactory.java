@@ -4,29 +4,28 @@ import nav.Coordinates;
 
 public class AircraftFactory {
     private static AircraftFactory instance;
+    private static long idCounter = 0;
+
     private AircraftFactory() {}
 
-    static {
-        try {
-            instance = new AircraftFactory();
-        } catch (Exception e) {
-            throw new RuntimeException("Exception occurred in creating singleton instance");
-        }
-    }
-
     public static AircraftFactory getInstance() {
+        if (instance == null) {
+            instance = new AircraftFactory();
+        }
         return instance;
     }
-    public Flyable newAircraft(String p_type, String p_name, Coordinates p_coordinates) {
-        switch (p_type.toLowerCase()) {
-            case "helicopter":
-                return new Helicopter(System.currentTimeMillis(), p_name, p_coordinates);
-            case "jetplane":
-                return new JetPlane(System.currentTimeMillis(), p_name, p_coordinates);
-            case "baloon":
-                return new Baloon(System.currentTimeMillis(), p_name, p_coordinates);
-            default:
-                throw new IllegalArgumentException("Unknown aircraft type: " + p_type);
-        }
+
+    private long nextId() {
+        return ++idCounter;
+    }
+
+    public Flyable newAircraft(String type, String name, Coordinates coordinates) {
+        long id = nextId();
+        return switch (type) {
+            case "Baloon", "Balloon" -> new Balloon(id, name, coordinates);
+            case "Helicopter" -> new Helicopter(id, name, coordinates);
+            case "JetPlane" -> new JetPlane(id, name, coordinates);
+            default -> throw new IllegalArgumentException("Invalid aircraft type: " + type);
+        };
     }
 }

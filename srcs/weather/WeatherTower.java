@@ -1,28 +1,21 @@
 package weather;
 
-import java.lang.String;
 import nav.Coordinates;
-import java.util.Random;
 
 public class WeatherTower extends Tower {
 
-    private String currentWeather;
-    private static final String[] WEATHER_STATES = {"RAIN", "FOG", "SUN", "SNOW"};
-    private static final Random random = new Random();
-
-    public WeatherTower() {
-        // Initialize with a random weather
-        currentWeather = WEATHER_STATES[random.nextInt(WEATHER_STATES.length)];
-    }
-
-    public String getWeather(Coordinates p_coordinates) {
-        // Ignore coordinates for now, return the randomly generated weather
-        return currentWeather;
+    public String getWeather(Coordinates coordinates) {
+        int seed = (coordinates.getLongitude() + coordinates.getLatitude() + coordinates.getHeight()) % 4;
+        return switch (seed) {
+            case 0 -> "RAIN";
+            case 1 -> "FOG";
+            case 2 -> "SUN";
+            case 3 -> "SNOW";
+            default -> "SUN";
+        };
     }
 
     public void changeWeather() {
-        // Generate a new random weather
-        currentWeather = WEATHER_STATES[random.nextInt(WEATHER_STATES.length)];
         conditionChanged();
     }
 }

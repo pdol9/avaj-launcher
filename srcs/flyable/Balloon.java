@@ -3,13 +3,13 @@ package flyable;
 import weather.*;
 import nav.Coordinates;
 
-public class Helicopter extends Aircraft {
-    public Helicopter(long p_id, String p_name, Coordinates p_coordinate) {
+class Balloon extends Aircraft {
+    public Balloon(long p_id, String p_name, Coordinates p_coordinate) {
         super(p_id, p_name, p_coordinate);
         System.out.printf("%s just took off. Let's enjoy the flight.\n",
                             this.getID());
-    }
 
+    }
     @Override
     public void registerTower(WeatherTower tower) {
         this.weatherTower = tower;
@@ -21,21 +21,21 @@ public class Helicopter extends Aircraft {
 
         switch (weather) {
             case "SUN":
-                coordinates.changeLongitude(10);
-                coordinates.changeHeight(2);
-                System.out.println(this.getID() + ": This is hot.");
+                coordinates.changeLongitude(2);
+                coordinates.changeHeight(4);
+                System.out.println(this.getID() + ": Let's enjoy the good weather and take some pics.");
                 break;
             case "RAIN":
-                coordinates.changeLongitude(5);
-                System.out.println(this.getID() + ": It's raining. Better watch out for lightings.");
+                coordinates.changeHeight(-5);
+                System.out.println(this.getID() + ": Damn you rain! You messed up my baloon.");
                 break;
             case "FOG":
-                coordinates.changeLongitude(1);
-                System.out.println(this.getID() + ": Can't see anything in this fog.");
+                coordinates.changeHeight(-3);
+                System.out.println(this.getID() + ": Fog is so thick...");
                 break;
             case "SNOW":
-                coordinates.changeHeight(-12);
-                System.out.println(this.getID() + ": My rotor is going to freeze!");
+                coordinates.changeHeight(-15);
+                System.out.println(this.getID() + ": It's snowing. We're gonna crash.");
                 break;
         }
 
@@ -47,6 +47,6 @@ public class Helicopter extends Aircraft {
 
     @Override
     public String getType() {
-        return "Helicopter";
+        return "Baloon";
     }
 }

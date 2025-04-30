@@ -7,9 +7,7 @@ public abstract class Flyable {
     protected WeatherTower weatherTower;
     public abstract Coordinates getCoordinates();
     public abstract void updateConditions();
-
-    public void registerTower(WeatherTower tower) {
-        this.weatherTower = tower;
-        tower.register(this);
-    }
+    public abstract void registerTower(WeatherTower tower);
+    public abstract String getType();
+    public abstract String getID();
 }
