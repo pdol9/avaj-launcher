@@ -1,4 +1,4 @@
-package flyable;
+package aviation;
 
 import nav.Coordinates;
 import weather.WeatherTower;
@@ -8,14 +8,13 @@ public abstract class Aircraft extends Flyable {
     protected long id;
     protected String name;
     protected Coordinates coordinates;
-    protected WeatherTower weatherTower;
-    protected boolean landed = false;
 
     protected Aircraft(long p_id, String p_name, Coordinates p_coordinate) {
         this.id = p_id;
         this.name = p_name;
         this.coordinates = p_coordinate;
     }
+
     @Override
     public void registerTower(WeatherTower p_tower) {
         this.weatherTower = p_tower;
@@ -25,10 +24,12 @@ public abstract class Aircraft extends Flyable {
     public Coordinates getCoordinates() {
         return coordinates;
     }
-    protected void land() {
-        if (!landed) {
-            landed = true;
-            System.out.println(this + " landing.");
+    protected void status_check() {
+        if (this.coordinates.getHeight() < 0) {
+            System.out.println("Attention! " + this.getID() + " crashed!.");
+            weatherTower.unregister(this);
+        } else if (this.coordinates.getHeight() == 0) {
+            System.out.println("Attention! " + this.getID() + " landed.");
             weatherTower.unregister(this);
         }
     }

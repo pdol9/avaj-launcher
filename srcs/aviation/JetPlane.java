@@ -1,20 +1,10 @@
-package flyable;
+package aviation;
 
 import nav.Coordinates;
-import weather.WeatherTower;
 
 class JetPlane extends Aircraft {
     public JetPlane(long p_id, String p_name, Coordinates p_coordinate) {
         super(p_id, p_name, p_coordinate);
-        System.out.printf("%s just took off. Let's enjoy the flight.\n",
-                            this.getID());
-
-    }
-
-    @Override
-    public void registerTower(WeatherTower tower) {
-        this.weatherTower = tower;
-        tower.register(this);
     }
 
     @Override
@@ -40,11 +30,7 @@ class JetPlane extends Aircraft {
                 System.out.println(this.getID() + ": OMG! Winter is coming!");
                 break;
         }
-
-        if (coordinates.getHeight() <= 0) {
-            landed = true;
-            System.out.println(this.getID() + " landing.");
-        }
+        this.status_check();
     }
 
     @Override

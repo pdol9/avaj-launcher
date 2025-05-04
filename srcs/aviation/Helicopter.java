@@ -1,20 +1,12 @@
-package flyable;
+package aviation;
 
-import weather.*;
 import nav.Coordinates;
 
 public class Helicopter extends Aircraft {
     public Helicopter(long p_id, String p_name, Coordinates p_coordinate) {
         super(p_id, p_name, p_coordinate);
-        System.out.printf("%s just took off. Let's enjoy the flight.\n",
-                            this.getID());
     }
 
-    @Override
-    public void registerTower(WeatherTower tower) {
-        this.weatherTower = tower;
-        tower.register(this);
-    }
     @Override
     public void updateConditions() {
         String weather = weatherTower.getWeather(coordinates);
@@ -37,12 +29,8 @@ public class Helicopter extends Aircraft {
                 coordinates.changeHeight(-12);
                 System.out.println(this.getID() + ": My rotor is going to freeze!");
                 break;
-        }
-
-        if (coordinates.getHeight() <= 0) {
-            landed = true;
-            System.out.println(this.getID() + " landing.");
-        }
+            }
+        this.status_check();
     }
 
     @Override

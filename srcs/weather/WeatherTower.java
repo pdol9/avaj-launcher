@@ -4,8 +4,8 @@ import nav.Coordinates;
 
 public class WeatherTower extends Tower {
 
-    public String getWeather(Coordinates coordinates) {
-        int seed = (coordinates.getLongitude() + coordinates.getLatitude() + coordinates.getHeight()) % 4;
+    public String getWeather(Coordinates p_coordinates) {
+        int seed = (p_coordinates.getLongitude() + p_coordinates.getLatitude() + p_coordinates.getHeight()) % 4;
         return switch (seed) {
             case 0 -> "RAIN";
             case 1 -> "FOG";

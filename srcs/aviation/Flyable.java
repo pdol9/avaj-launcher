@@ -1,4 +1,4 @@
-package flyable;
+package aviation;
 
 import nav.Coordinates;
 import weather.WeatherTower;
