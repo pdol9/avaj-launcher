@@ -10,4 +10,6 @@ public abstract class Flyable {
     public abstract void registerTower(WeatherTower tower);
     public abstract String getType();
     public abstract String getID();
-}
+    public abstract boolean isAlreadyRegistered();
+    public abstract void setRegistered(boolean flag);
+    }

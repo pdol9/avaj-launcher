@@ -1,16 +1,14 @@
 package app;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.List;
 
-import aviation.Flyable;
 import utils.FileUtils;
 
 public class Main {
     public static void main(String[] args) {
         if (args.length != 1) {
-            System.err.println("Usage: java -cp srcs app.Main scenario");
+            System.err.println("Error: Usage -> java -cp srcs app.Main scenario");
             System.exit(1);
         }
         String fileName = args[0];
@@ -19,9 +17,7 @@ public class Main {
 
         try {
             fileOut = FileUtils.redirectOutputToFile();
-            List<Flyable> aircrafts = new ArrayList<>();
-            Simulation.parseInputFile(lines, fileName, aircrafts);
-            Simulation.runSimulation(lines, fileName, aircrafts);
+            Simulation.runSimulation(lines, fileName);
         } catch (Exception e) {
             System.err.println("Error: Failed to run simulation: " + e.getMessage());
             System.exit(1);

@@ -1,16 +1,36 @@
 package app;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import nav.Coordinates;
 import weather.WeatherTower;
+import aviation.Aircraft;
 import aviation.AircraftFactory;
 import aviation.Flyable;
 
-import java.util.List;
-
 public class Simulation {
-    public static int parseSimIteration(List<String> lines, String fileName) {
+
+    private static final List<Flyable> aircrafts = new ArrayList<>();
+
+    public static void runSimulation(List<String> lines, String fileName) {
+        aircrafts.clear();
+        WeatherTower tower = new WeatherTower();
+        int numSimulations = parseSimIteration(lines, fileName);
+        
+        for (int i = 1; i < lines.size(); i++) {
+            String line = lines.get(i);
+            processScenarioFile(tower, line, i + 1, fileName);
+        }
+
+        for (int i = 0; i < numSimulations; i++) {
+            tower.changeWeather();
+        }
+    }
+
+    private static int parseSimIteration(List<String> lines, String fileName) {
         if (lines.size() < 2) {
-            System.err.println("Error: File '" + fileName + "' must have at least 2 lines (simulation count and one aircraft).");
+            System.err.println("Error: File '" + fileName + "' must have at least 2 lines (simulation count and at least one aircraft).");
             System.exit(1);
         }
         int numSimulations = 0;
@@ -27,72 +47,56 @@ public class Simulation {
         return numSimulations;
     }
 
-    public static void parseInputFile(List<String> lines, String fileName, List<Flyable> aircrafts) {
+    private static void processScenarioFile(WeatherTower tower, String line, int lineNumber, String fileName) {
         AircraftFactory factory = AircraftFactory.getInstance();
-        WeatherTower tower = new WeatherTower();
+        String[] parts = line.split("\\s+");
+        if (parts.length != 5) {
+            System.err.println("Error: Invalid line in '" + fileName + "' at line " + lineNumber + ": " + line);
+            System.exit(1);
+        }
 
-        for (int i = 1; i < lines.size(); i++) {
-            String line = lines.get(i);
-            String[] parts = line.split("\\s+");
-            if (parts.length != 5) {
-                System.err.println("Error: Invalid line in '" + fileName + "' at line " + (i + 1) + ": " + line);
-                System.exit(1);
-            }
-            String type = parts[0];
-            String name = parts[1];
-            int longitude = 0, latitude = 0, height = 0;
-            try {
-                longitude = Integer.parseInt(parts[2]);
-                latitude = Integer.parseInt(parts[3]);
-                height = Integer.parseInt(parts[4]);
-            } catch (NumberFormatException e) {
-                System.err.println("Error: Invalid coordinates in '" + fileName + "' at line " + (i + 1) + ": " + line);
-                System.exit(1);
-            }
-            // Validate coordinate ranges
-            if (longitude < 0) {
-                System.err.println("Error: Longitude must be positive in '" + fileName + "' at line " + (i + 1) + ": " + line);
-                System.exit(1);
-            }
-            if (longitude > 1000) {
-                System.err.println("Error: Longitude must be between 0 and 1000 in '" + fileName + "' at line " + (i + 1) + ": " + line);
-                System.exit(1);
-            }
-            if (latitude < 0) {
-                System.err.println("Error: Latitude must be positive in '" + fileName + "' at line " + (i + 1) + ": " + line);
-                System.exit(1);
-            }
-            if (latitude > 1000) {
-                System.err.println("Error: Latitude must be between 0 and 1000 in '" + fileName + "' at line " + (i + 1) + ": " + line);
-                System.exit(1);
-            }
-            if (height < 0) {
-                System.err.println("Error: Height must be positive in '" + fileName + "' at line " + (i + 1) + ": " + line);
-                System.exit(1);
-            }
-            if (height > 100) {
-                System.err.println("Error: Height must be between 0 and 100 in '" + fileName + "' at line " + (i + 1) + ": " + line);
-                System.exit(1);
-            }
+        String type = parts[0];
+        String name = parts[1];
+        int longitude = parseIntWithValidation(parts[2], "Longitude", lineNumber, fileName, line, 0, 1000);
+        int latitude = parseIntWithValidation(parts[3], "Latitude", lineNumber, fileName, line, 0, 1000);
+        int height = parseIntWithValidation(parts[4], "Height", lineNumber, fileName, line, 0, 100);
 
-            try {
-                Flyable aircraft = factory.newAircraft(type, name, new Coordinates(longitude, latitude, height));
-                aircraft.registerTower(tower);
-                aircrafts.add(aircraft);
-            } catch (Exception e) {
-                System.err.println("Error: Failed to create aircraft in '" + fileName + "' at line " + (i + 1) + ": " + line);
-                System.exit(1);
-            }
+        try {
+            Flyable aircraft = factory.newAircraft(type, name, new Coordinates(longitude, latitude, height));
+            aircrafts.add(aircraft);
+            markIfDuplicateName(aircrafts, aircraft, name);
+            aircraft.registerTower(tower);
+            tower.addTowersWatchList(aircraft);
+        } catch (Exception e) {
+            System.err.println("Error: Failed to process aircraft in '" + fileName + "' at line " + lineNumber + ": " + line);
+            System.exit(1);
         }
     }
 
-    public static void runSimulation(List<String> lines, String fileName, List<Flyable> aircrafts) {
-        int numSimulations = parseSimIteration(lines, fileName);
+    private static int parseIntWithValidation(String value, String fieldName, int lineNumber, String fileName, String line, int min, int max) {
+        int parsedValue = 0;
+        try {
+            parsedValue = Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            System.err.println("Error: Invalid " + fieldName.toLowerCase() + " in '" + fileName + "' at line " + lineNumber + ": " + line);
+            System.exit(1);
+        }
 
-        // Run simulations
-        WeatherTower tower = new WeatherTower();
-        for (int i = 0; i < numSimulations; i++) {
-            tower.changeWeather();
+        if (parsedValue < min || parsedValue > max) {
+            System.err.println("Error: " + fieldName + " must be between " + min + " and " + max + " in '" + fileName + "' at line " + lineNumber + ": " + line);
+            System.exit(1);
+        }
+
+        return parsedValue;
+    }
+
+    private static void markIfDuplicateName(List<Flyable> aircrafts, Flyable currentAircraft, String name) {
+        for (Flyable existingAircraft : aircrafts) {
+            if (existingAircraft != currentAircraft && ((Aircraft) existingAircraft).getName().equals(name)) {
+                currentAircraft.setRegistered(true);
+                existingAircraft.setRegistered(true);
+                break;
+            }
         }
     }
 }
