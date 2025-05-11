@@ -9,40 +9,49 @@ import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 public class FileUtils {
-    static String inputFile = "scenario.txt";
+    private static final String EXPECTED_INPUT_FILE = "scenario.txt";
+
     public static List<String> readFile(String fileName) {
-        // Check if fileName is null or empty
-        if (fileName == null || fileName.trim().isEmpty()) {
-            System.err.println("Error: No input file provided.");
-            System.exit(1);
-        }
-
-        if (!fileName.equals(inputFile)) {
-            System.err.println("Error: Input file must be named " + inputFile);
-            System.exit(1);
-        }
-
-        Path filePath = Paths.get(fileName);
-        List<String> lines = null;
-
-        // Check if file exists
-        if (!Files.exists(filePath)) {
-            System.err.println("Error: File '" + inputFile + "' does not exist.");
-            System.exit(1);
-        }
-
-        try {
-            lines = Files.readAllLines(filePath);
-            if (lines.isEmpty()) {
-                System.err.println("Error: File '" + inputFile + "' is empty.");
-                System.exit(1);
-            }
-        } catch (IOException e) {
-            System.err.println("Error: Unable to read " + inputFile);
-            System.exit(1);
-        }
-
+        validateFileName(fileName);
+        validateFileExists(fileName);
+        List<String> lines = readLines(fileName);
+        validateNotEmpty(lines, fileName);
         return lines;
+    }
+
+    private static void validateFileName(String fileName) {
+        if (fileName == null || fileName.trim().isEmpty()) {
+            exitWithError("Error: No input file provided.");
+        }
+        if (!fileName.equals(EXPECTED_INPUT_FILE)) {
+            exitWithError("Error: Input file must be named " + EXPECTED_INPUT_FILE);
+        }
+    }
+
+    private static void validateFileExists(String fileName) {
+        if (!Files.exists(Paths.get(fileName))) {
+            exitWithError("Error: File '" + fileName + "' does not exist.");
+        }
+    }
+
+    private static List<String> readLines(String fileName) {
+        try {
+            return Files.readAllLines(Paths.get(fileName));
+        } catch (IOException e) {
+            exitWithError("Error: Unable to read " + fileName);
+            return null; // unreachable, but required by compiler
+        }
+    }
+
+    private static void validateNotEmpty(List<String> lines, String fileName) {
+        if (lines.isEmpty()) {
+            exitWithError("Error: File '" + fileName + "' is empty.");
+        }
+    }
+
+    private static void exitWithError(String message) {
+        System.err.println(message);
+        System.exit(1);
     }
 
     public static PrintStream redirectOutputToFile() throws IOException {
