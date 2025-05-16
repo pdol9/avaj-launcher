@@ -11,25 +11,24 @@ public class Tower {
 
     public void register(Flyable p_flyable) {
         observers.add(p_flyable);
-        handleDuplicateAircraft(p_flyable, ((Aircraft)p_flyable).getName());
-        // simulation output
+        handleDuplicateAircraft(p_flyable, ((Aircraft) p_flyable).getName());
         if (((Aircraft) p_flyable).isDuplicate() == false || ((Aircraft) p_flyable).getAirStatus() == false) {
-            System.out.printf("Tower says: %s registered to weather tower.\n",
-            p_flyable.getID());
+            print_tower_msg(p_flyable);
         }
-        // p_flyable.setAirStatus(true);
     }
 
     public void unregister(Flyable p_flyable) {
         System.out.printf("Tower says: %s unregistered from weather tower.\n",
-        p_flyable.getID());
+                p_flyable.getID());
         p_flyable.setAirStatus(false);
     }
 
     protected void conditionChanged() {
-        List<Flyable> copy = new ArrayList<>(observers);
-        for (Flyable flyable : copy) {
+        for (Flyable flyable : this.observers) {
             try {
+                if (((Aircraft) flyable).getAirStatus() == false) {
+                    print_tower_msg(flyable);
+                }
                 flyable.updateConditions();
                 this.status_check(flyable);
             } catch (Exception e) {
@@ -39,15 +38,21 @@ public class Tower {
         }
     }
 
+    public void print_tower_msg(Flyable p_flyable) {
+        System.out.printf("Tower says: %s registered to weather tower.\n",
+                p_flyable.getID());
+    }
+
     public void status_check(Flyable p_flyable) {
         if (p_flyable.getCoordinates().getHeight() <= 0) {
             System.out.println("Attention! " + p_flyable.getID() + " landed.");
             this.unregister(p_flyable);
+        } else {
+            p_flyable.setAirStatus(true);
         }
     }
 
     private void handleDuplicateAircraft(Flyable newAircraft, String name) {
-
         for (Flyable existingAircraft : this.observers) {
             if (existingAircraft != newAircraft && ((Aircraft) existingAircraft).getName().equals(name)) {
 
@@ -57,6 +62,8 @@ public class Tower {
                 return;
             }
         }
+        // if not duplicate, initialise SharedState
         newAircraft.setAirborneReference();
+        newAircraft.setAirStatus(true);
     }
 }

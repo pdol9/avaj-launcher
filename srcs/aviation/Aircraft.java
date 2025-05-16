@@ -15,9 +15,21 @@ public abstract class Aircraft extends Flyable {
     /***************************************/
 
     protected SharedState AirborneState;
-    
+
+public class SharedState {
+    private boolean airborneStatus = false;
+
+    public boolean isAirborne() {
+        return this.airborneStatus;
+    }
+
+    public void setAirborneStatus(boolean flag) {
+        this.airborneStatus = flag;
+    }
+}
+
     public void setAirborneReference() {
-        this.AirborneState = new SharedState();
+        this.AirborneState = this.new SharedState();
     }
 
     public void linkAirborneStatus(Aircraft primary) {
