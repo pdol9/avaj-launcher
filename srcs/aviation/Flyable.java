@@ -10,6 +10,13 @@ public abstract class Flyable {
     public abstract void registerTower(WeatherTower tower);
     public abstract String getType();
     public abstract String getID();
-    public abstract boolean isAlreadyRegistered();
-    public abstract void setRegistered(boolean flag);
-    }
+    public abstract void setIdNum(Long existingId);
+    public abstract Long getIdNum();
+    public abstract void markDuplicate(boolean flag);
+    public abstract boolean isDuplicate();
+    public abstract void setAirborneReference();
+    public abstract void linkAirborneStatus(Aircraft primary);
+    public abstract void setAirStatus(boolean flag);
+    public abstract boolean getAirStatus();
+
+}

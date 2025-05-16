@@ -30,7 +30,6 @@ class JetPlane extends Aircraft {
                 System.out.println(this.getID() + ": OMG! Winter is coming!");
                 break;
         }
-        this.status_check();
     }
 
     @Override

@@ -30,7 +30,6 @@ public class Helicopter extends Aircraft {
                 System.out.println(this.getID() + ": My rotor is going to freeze!");
                 break;
             }
-        this.status_check();
     }
 
     @Override

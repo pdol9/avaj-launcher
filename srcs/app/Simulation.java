@@ -1,23 +1,18 @@
 package app;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import nav.Coordinates;
 import weather.WeatherTower;
-import aviation.Aircraft;
 import aviation.AircraftFactory;
 import aviation.Flyable;
 
 public class Simulation {
 
-    private static final List<Flyable> aircrafts = new ArrayList<>();
-
     public static void runSimulation(List<String> lines, String fileName) {
-        aircrafts.clear();
         WeatherTower tower = new WeatherTower();
         int numSimulations = parseSimIteration(lines, fileName);
-        
+
         for (int i = 1; i < lines.size(); i++) {
             String line = lines.get(i);
             processScenarioFile(tower, line, i + 1, fileName);
@@ -62,13 +57,10 @@ public class Simulation {
         int height = parseIntWithValidation(parts[4], "Height", lineNumber, fileName, line, 0, 100);
 
         try {
-            Flyable aircraft = factory.newAircraft(type, name, new Coordinates(longitude, latitude, height));
-            aircrafts.add(aircraft);
-            markIfDuplicateName(aircrafts, aircraft, name);
-            aircraft.registerTower(tower);
-            tower.addTowersWatchList(aircraft);
+            Flyable newAircraft = factory.newAircraft(type, name, new Coordinates(longitude, latitude, height));
+            newAircraft.registerTower(tower);
         } catch (Exception e) {
-            System.err.println("Error: Failed to process aircraft in '" + fileName + "' at line " + lineNumber + ": " + line);
+            System.err.println("Error: Failed to process aircraft in '" + fileName + "' at line " + lineNumber + ": " + line + "\n"  + e.getMessage());
             System.exit(1);
         }
     }
@@ -88,15 +80,5 @@ public class Simulation {
         }
 
         return parsedValue;
-    }
-
-    private static void markIfDuplicateName(List<Flyable> aircrafts, Flyable currentAircraft, String name) {
-        for (Flyable existingAircraft : aircrafts) {
-            if (existingAircraft != currentAircraft && ((Aircraft) existingAircraft).getName().equals(name)) {
-                currentAircraft.setRegistered(true);
-                existingAircraft.setRegistered(true);
-                break;
-            }
-        }
     }
 }

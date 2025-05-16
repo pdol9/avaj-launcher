@@ -18,7 +18,7 @@ class Balloon extends Aircraft {
                 break;
             case "RAIN":
                 coordinates.changeHeight(-5);
-                System.out.println(this.getID() + ": Damn you rain! You messed up my baloon.");
+                System.out.println(this.getID() + ": Damn you rain! You messed up my balloon.");
                 break;
             case "FOG":
                 coordinates.changeHeight(-3);
@@ -29,11 +29,10 @@ class Balloon extends Aircraft {
                 System.out.println(this.getID() + ": It's snowing. We're gonna crash.");
                 break;
         }
-        this.status_check();
     }
 
     @Override
     public String getType() {
-        return "Baloon";
+        return "Balloon";
     }
 }
