@@ -6,64 +6,60 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class WeatherProvider {
 
-    private final int indexOne;
-    private final int indexTwo;
-    private final int indexThree;
-    private final int indexFour;
+    // ────────────────────────────────────────────────────────────
+    // Singleton boilerplate
+    // ────────────────────────────────────────────────────────────
+    private static final WeatherProvider instance = new WeatherProvider();
 
-    private static WeatherProvider instance;
-    private WeatherProvider() {
-        indexOne = ThreadLocalRandom.current().nextInt(4);
-        indexTwo = ThreadLocalRandom.current().nextInt(4);
-        indexThree = ThreadLocalRandom.current().nextInt(4);
-        indexFour = ThreadLocalRandom.current().nextInt(4);
-    }
-
-    private String[] weather = {"FOG", "SNOW", "RAIN", "SUN"};
-
-    // static block initialization for exception handling
-    static {
-        try {
-            instance = new WeatherProvider();
-        } catch (Exception e) {
-            throw new RuntimeException("Exception occurred in creating singleton instance");
-        }
-    }
+    private WeatherProvider() {}
 
     public static WeatherProvider getInstance() {
         return instance;
     }
 
-    public String getCurrentWeather(Coordinates p_coordinates) {
-        final int lon = p_coordinates.getLongitude();
-        final int lat = p_coordinates.getLatitude();
-        final int height = p_coordinates.getHeight();
+    private static final String[] weather = {"FOG", "SNOW", "RAIN", "SUN"};
 
-        // weather ranges:
-        if (lon < 100 &&
-            lat < 100 &&
-            height <= 30) {
-            System.out.printf("WeatherProvider says: weather update: %s.\n", weather[indexOne]);
-            return weather[this.indexOne];
-            
+    /*
+    * Return the current weather for the provided coordinates.
+    * The world is divided into three deterministic “zones”; *within*
+    * a zone the weather is random on every call.
+    */
+        public String getCurrentWeather(Coordinates p_coordinates) {
+            int lon = p_coordinates.getLongitude();
+            int lat = p_coordinates.getLatitude();
+            int height = p_coordinates.getHeight();
+        
+        // Zone 1 ────────────────────────────────────────────────
+        if (lon < 100 && lat < 100 && height <= 30) {
+            return randomWeather("Zone 1");
         }
 
+        // Zone 2 ────────────────────────────────────────────────
         if (lon > 100 && lon <= 500 &&
-            lat > 0 && lat <= 300 &&
-            height <= 60 ) {
-            System.out.printf("WeatherProvider says: weather update: %s.\n", weather[indexTwo]);
-            return weather[this.indexTwo];
+            lat > 0   && lat <= 300 &&
+            height <= 60) {
+            return randomWeather("Zone 2");
         }
 
+        // Zone 3 ────────────────────────────────────────────────
         if (lon >= 250 && lon <= 750 &&
             lat >= 200 && lat <= 1000 &&
             height > 60 && height <= 80) {
-            System.out.printf("WeatherProvider says: weather update: %s.\n", weather[indexThree]);
-            return weather[this.indexThree];
+            return randomWeather("Zone 3");
         }
 
-        // Default
-        System.out.printf("WeatherProvider says: weather update: %s.\n", weather[indexFour]);
-        return weather[this.indexFour];
+        // Default zone ──────────────────────────────────────────
+        return randomWeather("Zone 4");
+    }
+
+    // ────────────────────────────────────────────────────────────
+    // Helper
+    // ────────────────────────────────────────────────────────────
+    /** Pick one of the four weather strings at random and print it. */
+    private String randomWeather(String zoneLabel) {
+        int idx = ThreadLocalRandom.current().nextInt(weather.length);
+        String w = weather[idx];
+        System.out.printf("WeatherProvider (%s) says: weather update: %s.%n", zoneLabel, w);
+        return w;
     }
 }
