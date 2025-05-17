@@ -15,15 +15,15 @@ After processing the input, the program generates a ```simulation.txt``` log fil
 
 To compile the program, run:
 ```bash
-	find * -name "*.java" > sources.txt
-	javac -d srcs @sources.txt
+find * -name "*.java" > sources.txt
+javac -d srcs @sources.txt
 ```
 
 ## Usage
 
 Run application with following command:
 ```bash
-	java -cp srcs app.Main scenario.txt
+java -cp srcs app.Main scenario.txt
 ```
 
 * There needs to be a ```scenario.txt``` file located in the root of the
@@ -34,57 +34,57 @@ is present.
 
 * provided UML class diagram
 
-                           +---------------------+
-                           |    <<interface>>	 |
-                           |	Flyable		 |
-                           +---------------------+
-                           |	 #WeatherTower	 |
-                           +---------------------+
-                           | +updateConditions() |
-                           | +registerTower()    |
-                           +---------------------+
-                                   ^
-                                   |
-        +--------------------------+--------------------------+
-        |                          |                          |
-+----------------+     +----------------+     +----------------+
-|   Helicopter   |     |    JetPlane    |     |     Baloon     |
-+----------------+     +----------------+     +----------------+
-| +updateCond()  |     | +updateCond()  |     | +updateCond()  |
-+----------------+     +----------------+     +----------------+
-        ^                          ^                          ^
-        |                          |                          |
-        +-----------+--------------+--------------+-----------+
-                    |     Aircraft (abstract)     |
-                    +-----------------------------+
-                    | #long id                    |
-                    | #string name                |
-                    | #Coordinates coordinates    |
-                    +-----------------------------+
-                    | ~Aircraft(...)              |
-                    +-----------------------------+
-				^
-				|
-                      +-----------------+
-                      | Coordinates	|
-                      +-----------------+
-                      | -longitude	|
-                      | -latitude	|
-                      | -height		|
-                      +-----------------+
-                      | +getLongitude() |
-                      | +getLatitude()  |
-                      | +getHeight()    |
-                      +-----------------+
+                                 +---------------------+
+                                 |    <<interface>>    |
+                                 |       Flyable       |
+                                 +---------------------+
+                                 |    #WeatherTower    |
+                                 +---------------------+
+                                 | +updateConditions() |
+                                 | +registerTower()    |
+                                 +---------------------+
+                                            ^
+                                            |
+                 +--------------------------+--------------------------+
+                 |                          |                          |
+        +----------------+         +----------------+         +----------------+
+        |   Helicopter   |         |    JetPlane    |         |     Baloon     |
+        +----------------+         +----------------+         +----------------+
+        | +updateCond()  |         | +updateCond()  |         | +updateCond()  |
+        +----------------+         +----------------+         +----------------+
+                 ^                          ^                          ^
+                 |                          |                          |
+                 +-----------+--------------+--------------+-----------+
+                             |     Aircraft (abstract)     |
+                             +-----------------------------+
+                             | #long id                    |
+                             | #string name                |
+                             | #Coordinates coordinates    |
+                             +-----------------------------+
+                             | ~Aircraft(...)              |
+                             +-----------------------------+
+                                           ^
+                                           |
+                                  +-----------------+
+                                  | Coordinates     |
+                                  +-----------------+
+                                  | -longitude      |
+                                  | -latitude       |
+                                  | -height         |
+                                  +-----------------+
+                                  | +getLongitude() |
+                                  | +getLatitude()  |
+                                  | +getHeight()    |
+                                  +-----------------+
 
-        +-----------------------+          +---------------------+
-        |	Tower		|<>--------|     WeatherTower    |
-        +-----------------------+          +---------------------+
-        | -observers		|          | +getWeather()       |
-        +-----------------------+          | +changeWeather()    |
-        | +register()		|	   +---------------------+
-        | +unregister()		|
-        | #conditionChanged()	|
+        +-----------------------+                    +---------------------+
+        |       Tower           |<>------------------|     WeatherTower    |
+        +-----------------------+                    +---------------------+
+        |     -observers        |                    |  +getWeather()      |
+        +-----------------------+                    |  +changeWeather()   |
+        | +register()           |                    +---------------------+
+        | +unregister()         |
+        | #conditionChanged()   |
         +-----------------------+
 
         +------------------------+
@@ -97,8 +97,8 @@ is present.
         +------------------------+
 
         +----------------------------------+
-        |	<<Singleton>>		   |
-        |	AircraftFactory		   |
+        |       <<Singleton>>              |
+        |       AircraftFactory            |
         +----------------------------------+
         | +newAircraft(type, name, coords) |
         +----------------------------------+
