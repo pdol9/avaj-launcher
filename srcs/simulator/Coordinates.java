@@ -31,5 +31,8 @@ public class Coordinates {
 
     public void changeHeight(int delta) {
         height += delta;
+        if (height > 100) {
+            height = 100;
+        }
     }
 }

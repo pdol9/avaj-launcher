@@ -9,6 +9,9 @@ public class WeatherTower extends Tower {
     }
 
     public void changeWeather() {
+        // Update all zones once
+        WeatherProvider.getInstance().updateWeather();
+        // Notify aircraft
         conditionChanged();
     }
 }
