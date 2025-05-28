@@ -3,8 +3,8 @@ package weather;
 import java.util.ArrayList;
 import java.util.List;
 
-import aviation.Aircraft;
-import aviation.Flyable;
+import aircrafts.Aircraft;
+import aircrafts.Flyable;
 
 public class Tower {
     private List<Flyable> observers = new ArrayList<>();
@@ -38,12 +38,12 @@ public class Tower {
         }
     }
 
-    public void print_tower_msg(Flyable p_flyable) {
+    private void print_tower_msg(Flyable p_flyable) {
         System.out.printf("Tower says: %s registered to weather tower.\n",
                 p_flyable.getID());
     }
 
-    public void status_check(Flyable p_flyable) {
+    private void status_check(Flyable p_flyable) {
         if (p_flyable.getCoordinates().getHeight() <= 0) {
             System.out.println("Attention! " + p_flyable.getID() + " landed.");
             this.unregister(p_flyable);

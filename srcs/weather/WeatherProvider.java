@@ -1,8 +1,9 @@
 package weather;
 
-import nav.Coordinates;
 import java.lang.String;
 import java.util.concurrent.ThreadLocalRandom;
+
+import simulator.Coordinates;
 
 public class WeatherProvider {
 
@@ -21,14 +22,14 @@ public class WeatherProvider {
 
     /*
     * Return the current weather for the provided coordinates.
-    * The world is divided into three deterministic “zones”; *within*
+    * The world is divided into four deterministic “zones”; *within*
     * a zone the weather is random on every call.
     */
-        public String getCurrentWeather(Coordinates p_coordinates) {
+    public String getCurrentWeather(Coordinates p_coordinates) {
             int lon = p_coordinates.getLongitude();
             int lat = p_coordinates.getLatitude();
             int height = p_coordinates.getHeight();
-        
+
         // Zone 1 ────────────────────────────────────────────────
         if (lon < 100 && lat < 100 && height <= 30) {
             return randomWeather("Zone 1");

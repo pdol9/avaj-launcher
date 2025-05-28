@@ -23,7 +23,7 @@ To compile the program, run:
 
 Run application with following command:
 ```bash
-	java -cp srcs app.Main scenario.txt
+	java -cp srcs simulator.Main scenario.txt
 ```
 
 * There needs to be a ```scenario.txt``` file located in the root of the

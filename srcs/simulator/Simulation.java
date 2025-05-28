@@ -1,11 +1,10 @@
-package app;
+package simulator;
 
 import java.util.List;
 
-import nav.Coordinates;
 import weather.WeatherTower;
-import aviation.AircraftFactory;
-import aviation.Flyable;
+import aircrafts.AircraftFactory;
+import aircrafts.Flyable;
 
 public class Simulation {
 

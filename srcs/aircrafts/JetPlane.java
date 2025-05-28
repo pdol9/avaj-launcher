@@ -1,6 +1,6 @@
-package aviation;
+package aircrafts;
 
-import nav.Coordinates;
+import simulator.Coordinates;
 
 class JetPlane extends Aircraft {
     public JetPlane(long p_id, String p_name, Coordinates p_coordinate) {

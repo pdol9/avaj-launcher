@@ -1,6 +1,6 @@
-package aviation;
+package aircrafts;
 
-import nav.Coordinates;
+import simulator.Coordinates;
 
 public class AircraftFactory {
     private static AircraftFactory instance;

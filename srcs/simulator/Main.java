@@ -1,4 +1,4 @@
-package app;
+package simulator;
 
 import java.io.PrintStream;
 import java.util.List;
@@ -8,7 +8,7 @@ import utils.FileUtils;
 public class Main {
     public static void main(String[] args) {
         if (args.length != 1) {
-            System.err.println("Error: Usage -> java -cp srcs app.Main scenario");
+            System.err.println("Error: Usage -> java -cp srcs simulator.Main scenario.txt");
             System.exit(1);
         }
         String fileName = args[0];

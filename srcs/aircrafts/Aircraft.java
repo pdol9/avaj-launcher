@@ -1,20 +1,19 @@
-package aviation;
+package aircrafts;
 
-import nav.Coordinates;
+import simulator.Coordinates;
 import weather.WeatherTower;
 
 public abstract class Aircraft extends Flyable {
-    
+
     protected long id;
     protected String name;
     protected Coordinates coordinates;
     protected boolean duplicate;
+    protected SharedState AirborneState;
 
     /***************************************/
     /*              SharedState            */
     /***************************************/
-
-    protected SharedState AirborneState;
 
 public class SharedState {
     private boolean airborneStatus = false;
@@ -63,6 +62,7 @@ public class SharedState {
         p_tower.register(this);
     }
 
+    @Override
     public Coordinates getCoordinates() {
         return coordinates;
     }
@@ -85,7 +85,7 @@ public class SharedState {
     public String getName() {
         return this.name;
     }
-    
+
     @Override
     public void markDuplicate(boolean flag) {
         this.duplicate = flag;

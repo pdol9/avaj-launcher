@@ -1,6 +1,6 @@
-package aviation;
+package aircrafts;
 
-import nav.Coordinates;
+import simulator.Coordinates;
 import weather.WeatherTower;
 
 public abstract class Flyable {
@@ -18,5 +18,4 @@ public abstract class Flyable {
     public abstract void linkAirborneStatus(Aircraft primary);
     public abstract void setAirStatus(boolean flag);
     public abstract boolean getAirStatus();
-
 }
