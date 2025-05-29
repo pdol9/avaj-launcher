@@ -1,7 +1,6 @@
 package aircrafts;
 
 import simulator.Coordinates;
-import weather.WeatherTower;
 
 public abstract class Aircraft extends Flyable {
 
@@ -11,9 +10,9 @@ public abstract class Aircraft extends Flyable {
     protected boolean duplicate;
     protected SharedState AirborneState;
 
-    /***************************************/
-    /*              SharedState            */
-    /***************************************/
+/****************************************************/
+/*                   SharedState                    */
+/****************************************************/
 
 public class SharedState {
     private boolean airborneStatus = false;
@@ -45,21 +44,15 @@ public class SharedState {
         return AirborneState.isAirborne();
     }
 
-        /************************************/
-        /*              Aircraft            */
-        /************************************/
+    /****************************************************/
+    /*                  Aircraft                        */
+    /****************************************************/
 
     protected Aircraft(long p_id, String p_name, Coordinates p_coordinate) {
         this.id = p_id;
         this.name = p_name;
         this.coordinates = p_coordinate;
         this.duplicate = false;
-    }
-
-    @Override
-    public void registerTower(WeatherTower p_tower) {
-        this.weatherTower = p_tower;
-        p_tower.register(this);
     }
 
     @Override
